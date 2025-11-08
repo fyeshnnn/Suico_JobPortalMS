@@ -124,8 +124,6 @@ class User extends Authenticatable
         return 'Job Seeker';
     }
 
-    // === ADD THE RELATIONSHIPS AND PROFILE METHODS HERE ===
-
     /**
      * Get the job seeker profile associated with the user.
      */

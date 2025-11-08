@@ -22,11 +22,12 @@
     <nav class="bg-white shadow-lg">
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex justify-between items-center py-4">
-                <div class="flex items-center space-x-1">
-                    <img src="{{ Storage::url('images/logo.png') }}" alt="SeiyaSphere Logo" class="w-14 h-14">
-    <span class="text-xl font-bold text-purple-700">SeiyaSphere</span>
-</div>
-                
+                <a href="{{ route('home') }}" class="flex items-center space-x-3 hover:opacity-80 transition">
+    <img src="{{ Storage::url('images/logo.png') }}" alt="SeiyaSphere Logo" class="w-12 h-12 object-contain">
+    <div>
+        <span class="text-xl font-bold text-purple-700">SeiyaSphere</span>
+        </div>
+</a>
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="{{ route('home') }}" class="text-gray-700 hover:text-purple-600 transition">Home</a>
                     <a href="{{ route('about') }}" class="text-gray-700 hover:text-purple-600 transition">About</a>
@@ -66,8 +67,8 @@
                 <div>
                     <h4 class="font-semibold mb-4">Legal</h4>
                     <ul class="space-y-2">
-                        <li><a href="{{ route('terms') }}" class="text-purple-200 hover:text-white transition">Terms & Conditions</a></li>
-                        <li><a href="#" class="text-purple-200 hover:text-white transition">Privacy Policy</a></li>
+                            <li><a href="{{ route('terms') }}" class="text-purple-200 hover:text-white transition">Terms & Conditions</a></li>
+                                <li><a href="{{ route('privacy') }}" class="text-purple-200 hover:text-white transition">Privacy Policy</a></li>
                     </ul>
                 </div>
                 <div>

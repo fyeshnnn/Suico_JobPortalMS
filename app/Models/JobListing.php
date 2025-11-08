@@ -84,4 +84,10 @@ class JobListing extends Model
     {
         return $this->created_at->gt(now()->subDays(3));
     }
+
+    // JobListing model
+    public function applications()
+    {
+    return $this->hasMany(JobApplication::class, 'job_listing_id');
+    }
 }

@@ -5,45 +5,50 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EmployerProfile extends Model
+class JobSeekerProfile extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'user_id',
-        'company_name',
-        'company_email',
-        'company_phone',
-        'company_address',
-        'company_city',
-        'company_state',
-        'company_country',
-        'company_postal_code',
-        'company_website',
-        'company_description',
-        'company_industry',
-        'company_size',
-        'founded_year',
-        'company_logo_path',
-        'contact_person_name',
-        'contact_person_position',
-        'contact_person_phone',
+        'phone',
+        'address',
+        'city',
+        'state',
+        'country',
+        'postal_code',
+        'date_of_birth',
+        'gender',
+        'headline',
+        'summary',
+        'current_position',
+        'current_company',
+        'industry',
+        'skills',
+        'experience_level',
+        'education_level',
+        'resume_file_path',
+        'resume_original_name',
+        'preferred_job_types',
+        'preferred_locations',
+        'expected_salary',
+        'salary_currency',
         'linkedin_url',
-        'facebook_url',
-        'twitter_url',
-        'is_verified',
-        'verified_at',
-        'verification_document_path',
-        'total_jobs_posted',
-        'active_jobs',
+        'portfolio_url',
+        'github_url',
+        'profile_visible',
+        'profile_views',
+        'last_profile_update',
     ];
 
     protected $casts = [
-        'is_verified' => 'boolean',
-        'verified_at' => 'datetime',
-        'founded_year' => 'integer',
-        'total_jobs_posted' => 'integer',
-        'active_jobs' => 'integer',
+        'skills' => 'array',
+        'preferred_job_types' => 'array',
+        'preferred_locations' => 'array',
+        'date_of_birth' => 'date',
+        'profile_visible' => 'boolean',
+        'expected_salary' => 'decimal:2',
+        'last_profile_update' => 'datetime',
     ];
 
     /**
@@ -55,18 +60,18 @@ class EmployerProfile extends Model
     }
 
     /**
-     * Get full company address
+     * Get skills as array
      */
-    public function getFullAddressAttribute(): string
+    public function getSkillsArrayAttribute(): array
     {
-        $parts = array_filter([
-            $this->company_address,
-            $this->company_city,
-            $this->company_state,
-            $this->company_country,
-            $this->company_postal_code
-        ]);
+        return $this->skills ?? [];
+    }
 
-        return implode(', ', $parts);
+    /**
+     * Get preferred job types as array
+     */
+    public function getPreferredJobTypesArrayAttribute(): array
+    {
+        return $this->preferred_job_types ?? [];
     }
 }

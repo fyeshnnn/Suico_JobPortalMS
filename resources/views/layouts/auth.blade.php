@@ -16,10 +16,18 @@
     <div class="max-w-md w-full space-y-8 bg-white rounded-2xl shadow-xl p-8">
         <!-- Logo -->
         <div class="text-center">
-            <div class="flex items-center justify-center space-x-1 mb-4">
-                    <img src="{{ Storage::url('images/logo.png') }}" alt="SeiyaSphere Logo" class="w-14 h-14">
+            <div class="text-center">
+    <a href="{{ route('home') }}" class="inline-block hover:opacity-80 transition">
+        <div class="flex items-center justify-center space-x-3 mb-4">
+            <img src="{{ Storage::url('images/logo.png') }}" 
+                 alt="SeiyaSphere Logo" 
+                 class="h-12 w-12 object-contain">
+            <div class="text-left">
                 <span class="text-2xl font-bold text-purple-700">SeiyaSphere</span>
             </div>
+        </div>
+    </a>
+</div>
             <p class="text-purple-500 text-sm">Where opportunities orbit you!</p>
         </div>
 

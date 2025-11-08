@@ -80,11 +80,18 @@
         </div>
     </div>
 
+<div class="flex items-center">
+    <input id="register_as_employer" name="register_as_employer" type="checkbox" 
+           class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+    <label for="register_as_employer" class="ml-2 block text-sm text-gray-900">
+        I also want to register as an Employer
+    </label>
+</div>
     <div class="flex items-center">
         <input id="terms" name="terms" type="checkbox" required
                class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
         <label for="terms" class="ml-2 block text-sm text-gray-900">
-            I agree to the <a href="{{ route('terms') }}" class="text-purple-600 hover:text-purple-500">Terms & Conditions</a> and <a href="#" class="text-purple-600 hover:text-purple-500">Privacy Policy</a>
+            I agree to the <a href="{{ route('terms') }}" class="text-purple-600 hover:text-purple-500">Terms & Conditions</a> and <a href="#" class="text-purple-600 hover:text-purple-500">Privacy Policy.</a>
         </label>
     </div>
 
