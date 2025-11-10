@@ -14,14 +14,13 @@ class DashboardController extends Controller
         $user = auth()->user();
         
         // Check current role from session
-        $currentRole = session('current_role', $user->is_employer ? 'employer' : 'job_seeker');
+        $currentRole = session('current_role', 'job_seeker');
         
         if ($currentRole === 'employer' && $user->is_employer) {
-            // Load employer dashboard
             return $this->employerDashboard();
         }
         
-        // Load job seeker dashboard
+        // Default to job seeker
         return $this->jobSeekerDashboard();
     }
 
@@ -32,13 +31,16 @@ class DashboardController extends Controller
         // Get featured jobs for recommendations
         $recommendedJobs = JobListing::with(['employer.employerProfile', 'category'])
             ->featured()
+            ->where('is_active', true)
+            ->where('application_deadline', '>=', now())
             ->take(4)
             ->get();
 
-        // Get latest jobs
-        $latestJobs = JobListing::with(['employer.employerProfile', 'category'])
+        // Get recent applications
+        $recentApplications = JobApplication::where('user_id', $user->id)
+            ->with(['job.employer.employerProfile', 'job.category'])
             ->latest()
-            ->take(6)
+            ->take(5)
             ->get();
 
         // Get categories for filter
@@ -56,7 +58,7 @@ class DashboardController extends Controller
         return view('dashboard.index', compact(
             'user',
             'recommendedJobs', 
-            'latestJobs',
+            'recentApplications',
             'categories',
             'jobTypes'
         ));
@@ -66,13 +68,13 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
         
-        // Get employer's jobs
+        // Get employer's jobs with applicant counts
         $postedJobs = JobListing::where('employer_id', $user->id)
             ->withCount('applications')
             ->latest()
             ->get();
 
-        // Get recent applicants
+        // Get recent applicants across all jobs
         $recentApplicants = JobApplication::whereHas('job', function($query) use ($user) {
                 $query->where('employer_id', $user->id);
             })
@@ -97,50 +99,19 @@ class DashboardController extends Controller
     }
 
     public function toggleRole(Request $request)
-{
-    try {
+    {
+        $request->validate([
+            'role' => 'required|in:job_seeker,employer'
+        ]);
+
         $user = auth()->user();
-        $role = $request->input('role');
 
-        \Log::info('Role toggle attempt', [
-            'user_id' => $user->id,
-            'user_email' => $user->email,
-            'requested_role' => $role,
-            'is_employer' => $user->is_employer,
-            'is_job_seeker' => $user->is_job_seeker
-        ]);
-
-        // For testing, allow role switching even if user doesn't have employer permissions
-        // In production, you might want to be more strict
-        if ($role === 'employer') {
-            // Allow switching to employer mode if user has employer permissions OR for testing
-            if ($user->is_employer) {
-                session(['current_role' => 'employer']);
-                \Log::info('Switched to employer role (user has permissions)');
-            } else {
-                // For testing/demo purposes, allow switching anyway
-                session(['current_role' => 'employer']);
-                \Log::info('Switched to employer role (demo mode - no permissions)');
-            }
-            return response()->json(['success' => true, 'message' => 'Switched to employer mode']);
-            
-        } elseif ($role === 'job_seeker') {
-            session(['current_role' => 'job_seeker']);
-            \Log::info('Switched to job seeker role');
-            return response()->json(['success' => true, 'message' => 'Switched to job seeker mode']);
+        if ($request->role === 'employer' && !$user->is_employer) {
+            return response()->json(['success' => false, 'message' => 'You are not registered as an employer.'], 403);
         }
 
-        return response()->json([
-            'success' => false, 
-            'message' => 'Invalid role specified'
-        ]);
-        
-    } catch (\Exception $e) {
-        \Log::error('Role toggle error: ' . $e->getMessage());
-        return response()->json([
-            'success' => false, 
-            'message' => 'Server error: ' . $e->getMessage()
-        ]);
-        }
+        session(['current_role' => $request->role]);
+
+        return response()->json(['success' => true]);
     }
 }

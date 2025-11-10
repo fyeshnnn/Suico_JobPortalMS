@@ -68,26 +68,33 @@
             @foreach($postedJobs as $job)
             <div class="border border-gray-200 rounded-lg p-4 hover:border-purple-300 hover:shadow-md transition">
                 <div class="flex items-center justify-between mb-3">
-                    <div>
-                        <h3 class="font-semibold text-gray-800">{{ $job->title }}</h3>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-gray-800 text-lg">{{ $job->title }}</h3>
                         <p class="text-sm text-gray-600">{{ $job->created_at->diffForHumans() }}</p>
                     </div>
                     <div class="text-right">
-                        <span class="inline-block px-2 py-1 text-xs rounded-full 
+                        <span class="inline-block px-3 py-1 text-xs rounded-full 
                             {{ $job->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                             {{ $job->is_active ? 'Active' : 'Closed' }}
                         </span>
                         <p class="text-sm text-gray-600 mt-1">{{ $job->applications_count }} applicants</p>
                     </div>
                 </div>
+                
+                <div class="flex items-center justify-between text-sm text-gray-600 mb-3">
+                    <span>📍 {{ $job->location }}</span>
+                    <span>💰 {{ $job->salary_range }}</span>
+                    <span>📅 {{ $job->application_deadline->diffForHumans() }}</span>
+                </div>
+                
                 <div class="flex items-center justify-between">
-                    <span class="text-sm text-gray-600">📍 {{ $job->location }}</span>
-                    <div class="flex space-x-2">
+                    <span class="text-xs text-purple-600 bg-purple-50 px-2 py-1 rounded">{{ $job->category->name ?? 'Uncategorized' }}</span>
+                    <div class="flex space-x-3">
                         <a href="{{ route('employer.jobs.show', $job) }}" class="text-purple-600 hover:text-purple-700 text-sm font-semibold">
                             View Details
                         </a>
                         <a href="{{ route('employer.jobs.applicants', $job) }}" class="text-blue-600 hover:text-blue-700 text-sm font-semibold">
-                            View Applicants
+                            View Applicants ({{ $job->applications_count }})
                         </a>
                     </div>
                 </div>
@@ -124,17 +131,17 @@
                     </div>
                     <span class="text-xs text-gray-500">{{ $application->created_at->diffForHumans() }}</span>
                 </div>
+                
                 <div class="flex items-center justify-between">
                     <span class="text-xs text-purple-600 bg-purple-50 px-2 py-1 rounded">
                         {{ $application->user->jobSeekerProfile->headline ?? 'No headline' }}
                     </span>
                     <div class="flex space-x-2">
-                        <button class="text-green-600 hover:text-green-700 text-sm font-semibold">
-                            Accept
-                        </button>
-                        <button class="text-red-600 hover:text-red-700 text-sm font-semibold">
-                            Reject
-                        </button>
+                        <span class="inline-block px-2 py-1 text-xs rounded-full 
+                            {{ $application->status === 'accepted' ? 'bg-green-100 text-green-800' : 
+                               ($application->status === 'rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') }}">
+                            {{ ucfirst($application->status) }}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -146,6 +153,14 @@
             </div>
             @endif
         </div>
+        
+        @if(!$recentApplicants->isEmpty())
+        <div class="mt-6 text-center">
+            <a href="#" class="text-purple-600 hover:text-purple-700 font-semibold">
+                View All Applicants →
+            </a>
+        </div>
+        @endif
     </div>
 </div>
 @endsection

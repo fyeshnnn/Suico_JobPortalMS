@@ -14,6 +14,7 @@
         </div>
     </div>
 </section>
+
 <!-- Popular Categories Section -->
 <section class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4">

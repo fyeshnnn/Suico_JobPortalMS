@@ -42,40 +42,36 @@ public function login(Request $request)
         return view('auth.register');
     }
 
-    // Handle Registration - CORRECTED VERSION
-    public function register(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'first_name' => 'required|string|max:255',
-            'middle_name' => 'nullable|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'terms' => 'required|accepted',
-        ]);
+    // Handle Registration
+public function register(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'first_name' => 'required|string|max:255',
+        'middle_name' => 'nullable|string|max:255',
+        'last_name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8|confirmed',
+        'terms' => 'required|accepted',
+    ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        $user = User::create([
-            'first_name' => $request->first_name,
-            'middle_name' => $request->middle_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'is_job_seeker' => true, // Default to job seeker
-            'is_employer' => $request->has('register_as_employer'), // Optional employer role
-        ]);
-
-        // Don't log them in automatically - redirect to login page instead
-        // Auth::login($user);
-
-        // Redirect to login page with success message
-        return redirect()->route('login')->with('success', 'Registration successful! Please log in to continue.');
+    if ($validator->fails()) {
+        return redirect()->back()
+            ->withErrors($validator)
+            ->withInput();
     }
+
+    $user = User::create([
+        'first_name' => $request->first_name,
+        'middle_name' => $request->middle_name,
+        'last_name' => $request->last_name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'is_job_seeker' => true, // Default to job seeker
+        'is_employer' => $request->has('register_as_employer'), // This should be true if checkbox is checked
+    ]);
+
+    return redirect()->route('login')->with('success', 'Registration successful! Please log in to continue.');
+}
 
     // Handle Logout
     public function logout(Request $request)
